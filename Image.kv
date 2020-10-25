@@ -1,0 +1,25 @@
+<myLayout>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+            size_hint_y: None
+            height: 30
+            FileChooserListView:
+            id: flc
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+
+<FullImage>:
+            texture: self.texture
+            size: width = 120, height = 170
+            pos: self.x 0, self.y + 20
+
+
+
+
+
+
+
+
+
+

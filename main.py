@@ -1,19 +1,15 @@
 import kivy
 import random
 import os
-from kivy.core.audio import SoundLoader
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
-from kivy.factory import Factory
 from kivy.uix.image import AsyncImage
 from kivy.uix.filechooser import FileChooserListView
-from kivy.resources import resource_find
-from kivy.properties import StringProperty, ObjectProperty, ListProperty, \
-    AliasProperty, BooleanProperty, NumericProperty
+from kivy.core.audio import SoundLoader
 from kivy.loader import Loader
 
 

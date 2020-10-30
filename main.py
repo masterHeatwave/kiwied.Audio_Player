@@ -1,24 +1,14 @@
-import kivy
-import random
-import os
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
-from kivy.uix.image import Image
-from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import AsyncImage
 from kivy.uix.filechooser import FileChooserListView
 from kivy.core.audio import SoundLoader
-from kivy.loader import Loader
-
-
-# delayed imports
-Loader.num_workers = 4
 
 
 def callback(instance):
-        print('The button <%s> is being pressed' % instance.text)
+   print('The button <%s> is being pressed' % instance.text)
 
 
 red = [1, 0, 0, 1]
@@ -27,85 +17,80 @@ blue = [0, 0, 1, 1]
 purple = [1, 0, 1, 1]
 
 
-
 class myLayout(BoxLayout):
 
     color = [red, green, blue, purple]
+    path = '/home/edward/Music'
 
 
     def __init__(self, **kwargs):
-            super(myLayout, self).__init__(**kwargs)
+        super(myLayout, self).__init__(**kwargs)
+        self.sound = None
 
-            layout = BoxLayout(pos=self.pos, size=self.size,spacing=10)
+        layout = BoxLayout(pos=self.pos, size=self.size,spacing=10)
 
-            self.add_widget(layout)
+        self.add_widget(layout)
 
-            flc = FileChooserListView(path='/home/edward/Music/', filters=['*.3gp'], size_hint=(3, 1))
-            flc.bind(on_selection=self.play_pressed)
-            layout.add_widget(flc)
+        flc = FileChooserListView(path='/home/edward/Music',filters=['*.mp3'],size=(7, 3))
+        flc.bind(selection=self.load_sound)  # bind to the property `selection`
+
+        layout.add_widget(flc)
 
         # creating the play button
 
-            play = Button(text="PLAY", valign='center', halign='center', size_hint=(0.6, 0.5),
-                       background_color=blue)
-            layout.add_widget(play)
-            play.bind(on_press=self.play_pressed)
+        play = Button(text="PLAY",valign='center', halign='center',background_color=blue,size_hint=(0.3, 0.5))
+
+        play.bind(on_press=self.play_pressed)
+        layout.add_widget(play)
 
         # creating the stop button
 
-            stop = Button(text="STOP", valign='center', halign='center',
-                      size_hint=(0.6, 0.6), background_color=red)
-            layout.add_widget(stop)
-            stop.bind(on_press=self.stop_pressed)
+        stop = Button(text="STOP", valign='center',halign='center',size_hint=(0.3, 0.6),background_color=red)
+        layout.add_widget(stop)
+        stop.bind(on_press=self.stop_pressed)
 
-            display = Label(text="kiwiAudioPlayer", halign='right',
-                        size=(7, 5))
+        #creating a Label
 
-            self.add_widget(display)
+        display=Label(text="kiwiAudioPlayer",halign='right', size=(3,5))
 
-            animate = AsyncImage(source='https://i.gifer.com/KNGq.gif', allow_stretch=False, anim_delay=0.10)
+        layout.add_widget(display)
 
-            layout.add_widget(animate)
+        #displaying an animated image
 
+        animate = AsyncImage(source='https://i.gifer.com/KNGq.gif',                              allow_stretch=False, anim_delay=0.10)
 
+        layout.add_widget(animate)
 
-    def play_pressed(self, play):
+    #trying to define a load song function
 
-            sound = SoundLoader.load('/home/edward/Music/massive attack/Mezzanine/02 Risingson.mp3')
-            if sound:
-                print("Sound found at %s" % sound.source)
-                print("Sound is %.3f seconds" % sound.length)
-            sound.play()
+    def load_sound(self, filechooser, selection):
 
-    def stop_pressed(self, stop):
+        if self.sound is not None:
+            self.sound.stop()
+        self.sound = SoundLoader.load(selection[0])
 
-            sound = SoundLoader.unload('/home/edward/Music/massive attack/Mezzanine/02 Risingson.mp3')
-            sound.stop()
+    #play button function
 
-    def pressed(self, filename):
+    def play_pressed(self, button):
 
-            with open(os.path.join(path, filename[0])):
+        if self.sound is not None:
+            self.sound.play()
 
-                if self.soundf is None:
-                    self.soundf = SoundLoader.load(self.path)
-                if self.soundf.status != 'stop':
-                    self.soundf.stop()
-                    self.soundf.loop = False
-                    self.soundf.play()
+    #stop button function
 
-class FullImage(Image):
+    def stop_pressed(self, button):
 
-    pass
+        if self.sound is not None:
+            self.sound.stop()
 
+#main function
 
 class musicApp(App):
 
-    pass
+   def build(self):
 
-    def build(self):
-
-        return myLayout()
+      return myLayout()
 
 if __name__ == "__main__":
-        app = musicApp()
-        app.run()
+       app = musicApp()
+       app.run()
